@@ -2,6 +2,8 @@
 # begin here; enter into a directory and recursively look into it.
 function dir_enter($entry_dir='/', $depth=0)
 {
+	$found = 0;
+
 	# Remove the last trailing slash and void dual writing
 	$entry_dir = preg_replace('/\/$/i', '', $entry_dir);
 
@@ -32,7 +34,7 @@ function dir_enter($entry_dir='/', $depth=0)
 				
 				# Recurse through the file
 				$function = __FUNCTION__;
-				$function($full_file_path, $depth+1);
+				$found += $function($full_file_path, $depth+1);
 			}
 			else
 			{
@@ -40,10 +42,13 @@ function dir_enter($entry_dir='/', $depth=0)
 				#fecho("{$full_file_path}");
 				#fecho("{$filename}");
 
+				++$found;
 				process_file($full_file_path, $depth);
 			}
 		}
 		closedir($dir_handle);
 	}
+	
+	return $found;
 }
 ?>
